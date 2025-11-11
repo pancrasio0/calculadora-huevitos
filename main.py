@@ -7,9 +7,9 @@ from clases import Huevito, Item
 #Se usan tuplas para mejor lectura en usuario común
 #El órden es ("NOMBRE", precio, "PROBABILIDAD%")
 
-buebito_price = 900_000   # Precio por buebito
-n_boxes = 100               # buebitos por simulación
-n_trials = 100             # Cantidad de simulaciones, usar un mínimo sobre 50 para que no se bugee el gráfico <3
+buebito_price = 1000_000   # Precio por buebito
+n_buebitos = 100               # buebitos por simulación
+n_trials = 1000            # Cantidad de simulaciones, usar un mínimo sobre 50 para que no se bugee el gráfico <3
 rng = 3                     # Semilla de RNG
 
 item_data = [
@@ -33,13 +33,13 @@ item_data = [
     ("Expanded Ancestral Box", 1_400_000, "1,0000%"),
     ("Clever Combiner", 2_000_000, "1,5000%"),
     ("Durable Combiner", 2_000_000, "1,5000%"),
-    ("Shadow Enchanter", 15_000_000, "2,0000%"),
+    ("Shadow Enchanter", 10_000_000, "2,0000%"),
     ("Shadow Synthesis Box", 800_000, "2,0000%"),
     ("Greed Shadow Box", 2_000_000, "2,0000%"),
     ("Rigid Combiner", 0, "2,0000%"),
     ("Athena Combiner", 0, "2,0000%"),
     ("Physical and Magical Combiner", 0, "2,0000%"),
-    ("Shadow Material Cube 3", 15_000_000, "2,5000%"),
+    ("Shadow Material Cube 3", 10_000_000, "2,5000%"),
     ("Blacksmith Blessing", 3_000_000, "3,0000%"),
     ("Cx. Cat Paw Card (1 day)", 0, "3,0000%"),
     ("Stats Soul Potion Box", 300_000, "3,0000%"),
@@ -60,7 +60,7 @@ item_data = [
 items = [Item(name, price, prob) for name, price, prob in item_data]
 
 buebito = Huevito(items)
-results = buebito.simulate(n_boxes, n_trials, buebito_price, rng)
+results = buebito.simulate(n_buebitos, n_trials, buebito_price, rng)
 
 buebito.print_statistics(results)
 
@@ -124,7 +124,7 @@ for i, (bar, count) in enumerate(zip(bars, counts)):
 
 plt.xticks(range(len(labels)), labels, rotation=45, ha='right')
 plt.axvline(0.5, color='red', linestyle='--', linewidth=2, label='Punto de equilibrio (0)')
-plt.title("Distribución del beneficio neto (100 cajas x 1000 repeticiones)")
+plt.title(f"Distribución del beneficio neto ({n_buebitos} buebitos x {n_trials} repeticiones)")
 plt.xlabel("Rango de beneficio neto (zeny)")
 plt.ylabel("Frecuencia")
 plt.legend()

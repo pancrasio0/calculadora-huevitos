@@ -30,15 +30,15 @@ class Huevito:
     def get_item_names(self):
         return [item.name for item in self.items]
     
-    def simulate(self, n_boxes, n_trials, buebito_price, seed): #Cambiar semilla si se quiere cambiar el rng
+    def simulate(self, n_buebitos, n_trials, buebito_price, seed): #Cambiar semilla si se quiere cambiar el rng
         """Ejecuta simulación Monte Carlo"""
         rng = np.random.default_rng(seed=seed)
         results = []
         
         for i in range(n_trials):
-            draws = rng.choice(len(self.items), size=n_boxes, p=self.probs)
+            draws = rng.choice(len(self.items), size=n_buebitos, p=self.probs)
             value = sum(self.prices[j] for j in draws)
-            cost = n_boxes * buebito_price
+            cost = n_buebitos * buebito_price
             net = value - cost
             results.append(net)
         
