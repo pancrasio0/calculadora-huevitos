@@ -7,13 +7,13 @@ from clases import Huevito, Item
 #Se usan tuplas para mejor lectura en usuario común
 #El órden es ("NOMBRE", precio, "PROBABILIDAD%")
 
-buebito_price = 1_000_000   # Precio por buebito
+buebito_price = 900_000   # Precio por buebito
 n_boxes = 100               # buebitos por simulación
 n_trials = 1000             # Cantidad de simulaciones
 rng = 1                     # Semilla de RNG
 
 item_data = [
-    ("Armor +13 Refine Ticket", 700_000_000, "0,0250%"),
+    ("Armor +13 Refine Ticket", 1000_000_000, "0,0250%"),
     ("Weapon +13 Refine Ticket", 700_000_000, "0,0300%"),
     ("Boots Modifying Cube", 400_000_000, "0,0350%"),
     ("Low Refining Envelope", 100_000_000, "0,0500%"),
@@ -70,17 +70,39 @@ negative = results[results < 0] #Para ver probabilidad de no ganar
 middle = results[(results >= 0) & (results <= threshold_high)]
 high = results[results > threshold_high]
 
-bin_edges = [results.min(), 0]  # Bin para negativos
-bin_edges.extend(np.linspace(0, threshold_high, 11)[1:])  # 10 bins entre 0-600M
-bin_edges.append(results.max() + 1)  # Bin para >600M
+min_val = results.min()
+max_val = results.max()
+
+bin_edges = []
+
+bin_edges.append(min_val - 1)  # Un poco menos del mínimo
+
+if min_val < 0:
+    bin_edges.append(0)
+
+lower_bound = max(0, min_val)
+bin_edges.extend(np.linspace(lower_bound, threshold_high, 11)[1:])  # 10 bins
+
+bin_edges.append(max_val + 1)
+
+bin_edges = sorted(set(bin_edges))
 
 binned_results = np.digitize(results, bin_edges) - 1
 counts = np.bincount(binned_results, minlength=len(bin_edges)-1)
 
-labels = [f"<0M"]
-for i in range(1, len(bin_edges)-2):
-    labels.append(f"{bin_edges[i]/1e6:.0f}-{bin_edges[i+1]/1e6:.0f}M")
-labels.append(f">{threshold_high/1e6:.0f}M")
+labels = []
+for i in range(len(bin_edges)-1):
+    lower = bin_edges[i]
+    upper = bin_edges[i+1]
+    
+    if upper <= 0:
+        labels.append(f"<0M")
+    elif lower < 0 and upper > 0:
+        labels.append(f"<0M")
+    elif upper > threshold_high:
+        labels.append(f">{threshold_high/1e6:.0f}M")
+    else:
+        labels.append(f"{lower/1e6:.0f}-{upper/1e6:.0f}M")
 
 # Graficar
 plt.figure(figsize=(14,6))
