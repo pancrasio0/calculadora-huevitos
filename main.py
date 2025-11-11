@@ -9,8 +9,8 @@ from clases import Huevito, Item
 
 buebito_price = 900_000   # Precio por buebito
 n_boxes = 100               # buebitos por simulación
-n_trials = 1000             # Cantidad de simulaciones
-rng = 1                     # Semilla de RNG
+n_trials = 100             # Cantidad de simulaciones, usar un mínimo sobre 50 para que no se bugee el gráfico <3
+rng = 3                     # Semilla de RNG
 
 item_data = [
     ("Armor +13 Refine Ticket", 1000_000_000, "0,0250%"),
